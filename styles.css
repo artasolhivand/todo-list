@@ -1,0 +1,328 @@
+/* ============================================
+   Design tokens
+   ============================================ */
+:root {
+  --bg: #EEF0F5;
+  --surface: #FFFFFF;
+  --ink: #1B2430;
+  --ink-soft: #66707F;
+  --line: #DDE1E9;
+  --accent: #FF6B4A;
+  --accent-soft: #FFE7DF;
+  --done: #3E8062;
+  --done-soft: #E1F0E7;
+
+  --font-display: 'Newsreader', 'Vazirmatn', serif;
+  --font-body: 'Manrope', 'Vazirmatn', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --shadow: 0 10px 28px rgba(27, 36, 48, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+button { font-family: inherit; cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+.wrap {
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 56px 24px 32px;
+  flex: 1;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  margin: 0 0 6px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 2.1rem;
+  margin: 0;
+  color: var(--ink);
+}
+
+.stats-line {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin: 20px 0 0;
+}
+
+/* Signature element: circular progress ring */
+.ring-wrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+.ring-track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 6;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 213.6;
+  stroke-dashoffset: 213.6;
+  transition: stroke-dashoffset 0.5s ease, stroke 0.3s ease;
+}
+
+.ring-progress.complete { stroke: var(--done); }
+
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================
+   Task form
+   ============================================ */
+.task-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 36px;
+}
+
+.task-input {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+.task-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.task-input::placeholder { color: var(--ink-soft); }
+
+.add-btn {
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0 24px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.add-btn:hover { background: #2B3648; transform: translateY(-1px); }
+.add-btn:active { transform: translateY(0); }
+
+/* ============================================
+   Filter chips
+   ============================================ */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.filter-chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+}
+.filter-chip:hover { border-color: var(--accent); color: var(--ink); }
+.filter-chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+
+/* ============================================
+   Task list
+   ============================================ */
+.task-list {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 14px 14px 16px;
+  animation: task-in 0.22s ease;
+}
+
+@keyframes task-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.task-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 100px;
+  border: 2px solid var(--line);
+  background: none;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+.task-checkbox:hover { border-color: var(--accent); }
+.task-checkbox.checked {
+  background: var(--done);
+  border-color: var(--done);
+}
+.task-checkbox svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.task-checkbox.checked svg { opacity: 1; }
+
+.task-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--ink);
+  word-break: break-word;
+}
+.task-item.completed .task-text {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--ink-soft);
+}
+
+.task-delete {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.task-item:hover .task-delete { opacity: 1; }
+.task-delete:hover { color: var(--accent); background: var(--accent-soft); }
+
+/* ============================================
+   Empty state
+   ============================================ */
+.empty-state {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  padding: 48px 0;
+  margin: 0;
+}
+
+/* ============================================
+   List footer
+   ============================================ */
+.list-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  text-decoration: underline;
+}
+.clear-btn:hover { color: var(--accent); }
+
+/* ============================================
+   Footer
+   ============================================ */
+.site-footer {
+  text-align: center;
+  padding: 24px 24px 32px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   Focus visibility
+   ============================================ */
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 480px) {
+  .wrap { padding: 40px 18px 24px; }
+  .title { font-size: 1.7rem; }
+  .ring-wrap { width: 52px; height: 52px; }
+}
