@@ -4,23 +4,69 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Daily Tasks</title>
+<meta name="description" content="A small, focused daily task manager built with vanilla HTML, CSS and JavaScript.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<header>
-  <h1>Daily Tasks</h1>
-</header>
+<main class="wrap">
 
-<main>
-  <form id="taskForm">
-    <input type="text" id="taskInput" placeholder="Add a new task...">
-    <button type="submit">Add</button>
+  <header class="app-header">
+    <div class="header-top">
+      <div>
+        <p class="eyebrow" id="dateLabel">Loading date…</p>
+        <h1 class="title">Daily Tasks</h1>
+      </div>
+
+      <div class="ring-wrap" aria-hidden="true">
+        <svg class="ring" viewBox="0 0 80 80">
+          <circle class="ring-track" cx="40" cy="40" r="34"></circle>
+          <circle class="ring-progress" id="ringProgress" cx="40" cy="40" r="34"></circle>
+        </svg>
+        <span class="ring-label" id="ringLabel">0%</span>
+      </div>
+    </div>
+
+    <p class="stats-line" id="statsLine">No tasks yet</p>
+  </header>
+
+  <form id="taskForm" class="task-form">
+    <input
+      type="text"
+      id="taskInput"
+      class="task-input"
+      placeholder="What do you need to do?"
+      autocomplete="off"
+      maxlength="120"
+    >
+    <button type="submit" class="add-btn">Add</button>
   </form>
 
-  <ul id="taskList">
-    <!-- tasks will be added here -->
+  <div class="filter-row" id="filterRow">
+    <button class="filter-chip active" data-filter="all">All</button>
+    <button class="filter-chip" data-filter="active">Active</button>
+    <button class="filter-chip" data-filter="completed">Completed</button>
+  </div>
+
+  <ul class="task-list" id="taskList">
+    <!-- tasks are rendered here by script.js -->
   </ul>
+
+  <p class="empty-state" id="emptyState" hidden>Nothing here. Add your first task above.</p>
+
+  <div class="list-footer" id="listFooter" hidden>
+    <span id="remainingCount"></span>
+    <button class="clear-btn" id="clearCompletedBtn">Clear completed</button>
+  </div>
+
 </main>
 
+<footer class="site-footer">
+  <p>Built by Arta Solhivand — plain HTML, CSS &amp; JavaScript, no frameworks.</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
