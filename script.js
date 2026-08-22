@@ -67,6 +67,20 @@ function clearCompleted() {
   render();
 }
 
+function editTask(id, newText) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+
+  const trimmed = newText.trim();
+  if (trimmed === '') {
+    deleteTask(id);
+    return;
+  }
+  task.text = trimmed;
+  saveTasks();
+  render();
+}
+
 /* ============================================
    Form submit
    ============================================ */
@@ -136,7 +150,7 @@ function render() {
       <button class="task-checkbox ${task.completed ? 'checked' : ''}" data-id="${task.id}" aria-label="Toggle task">
         ${CHECK_ICON}
       </button>
-      <span class="task-text">${escapeHtml(task.text)}</span>
+      <span class="task-text" data-id="${task.id}" title="Double-click to edit">${escapeHtml(task.text)}</span>
       <button class="task-delete" data-id="${task.id}" aria-label="Delete task">✕</button>
     `;
     taskListEl.appendChild(li);
@@ -146,6 +160,8 @@ function render() {
     btn.addEventListener('click', () => toggleTask(btn.dataset.id)));
   taskListEl.querySelectorAll('.task-delete').forEach(btn =>
     btn.addEventListener('click', () => deleteTask(btn.dataset.id)));
+  taskListEl.querySelectorAll('.task-text').forEach(span =>
+    span.addEventListener('dblclick', () => startEditingTask(span)));
 
   // Footer + stats
   const total = tasks.length;
@@ -161,6 +177,37 @@ function render() {
     : `${completed} of ${total} completed`;
 
   updateProgressRing(total, completed);
+}
+
+function startEditingTask(span) {
+  const id = span.dataset.id;
+  const currentText = span.textContent;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'task-edit-input';
+  input.value = currentText;
+  input.maxLength = 120;
+
+  span.replaceWith(input);
+  input.focus();
+  input.select();
+
+  function commit() {
+    editTask(id, input.value);
+  }
+
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      input.blur();
+    }
+    if (e.key === 'Escape') {
+      input.removeEventListener('blur', commit);
+      render();
+    }
+  });
 }
 
 function escapeHtml(str) {

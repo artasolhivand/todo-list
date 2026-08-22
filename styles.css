@@ -252,6 +252,20 @@ button { font-family: inherit; cursor: pointer; }
   text-decoration-color: var(--ink-soft);
 }
 
+.task-edit-input {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: var(--accent-soft);
+}
+.task-edit-input:focus {
+  outline: none;
+}
+
 .task-delete {
   background: none;
   border: none;
