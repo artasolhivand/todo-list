@@ -1,8 +1,9 @@
 /* ============================================
    State
    ============================================ */
-let tasks = [];       // [{ id, text, completed }]
+let tasks = [];       // [{ id, text, completed, priority }]
 let currentFilter = 'all';
+let currentSort = 'newest';
 
 const STORAGE_KEY = 'daily-tasks';
 
@@ -29,7 +30,9 @@ function saveTasks() {
 function loadTasks() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) tasks = JSON.parse(saved);
+    if (saved) {
+      tasks = JSON.parse(saved).map(t => ({ priority: 'medium', ...t }));
+    }
   } catch (err) {
     console.warn('Could not load tasks from localStorage', err);
   }
@@ -38,11 +41,12 @@ function loadTasks() {
 /* ============================================
    Task actions
    ============================================ */
-function addTask(text) {
+function addTask(text, priority) {
   tasks.unshift({
     id: 'task-' + Date.now(),
     text: text.trim(),
     completed: false,
+    priority: priority || 'medium',
   });
   saveTasks();
   render();
@@ -86,12 +90,13 @@ function editTask(id, newText) {
    ============================================ */
 const taskForm = document.getElementById('taskForm');
 const taskInput = document.getElementById('taskInput');
+const prioritySelect = document.getElementById('prioritySelect');
 
 taskForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const value = taskInput.value.trim();
   if (value === '') return;
-  addTask(value);
+  addTask(value, prioritySelect.value);
   taskInput.value = '';
   taskInput.focus();
 });
@@ -111,10 +116,23 @@ filterRow.addEventListener('click', (e) => {
 });
 
 function getFilteredTasks() {
-  if (currentFilter === 'active') return tasks.filter(t => !t.completed);
-  if (currentFilter === 'completed') return tasks.filter(t => t.completed);
-  return tasks;
+  let result = tasks;
+  if (currentFilter === 'active') result = tasks.filter(t => !t.completed);
+  if (currentFilter === 'completed') result = tasks.filter(t => t.completed);
+
+  if (currentSort === 'priority') {
+    const order = { high: 0, medium: 1, low: 2 };
+    result = [...result].sort((a, b) => order[a.priority] - order[b.priority]);
+  }
+
+  return result;
 }
+
+const sortSelect = document.getElementById('sortSelect');
+sortSelect.addEventListener('change', (e) => {
+  currentSort = e.target.value;
+  render();
+});
 
 /* ============================================
    Rendering
@@ -150,6 +168,7 @@ function render() {
       <button class="task-checkbox ${task.completed ? 'checked' : ''}" data-id="${task.id}" aria-label="Toggle task">
         ${CHECK_ICON}
       </button>
+      <span class="priority-dot priority-${task.priority}" title="${task.priority} priority"></span>
       <span class="task-text" data-id="${task.id}" title="Double-click to edit">${escapeHtml(task.text)}</span>
       <button class="task-delete" data-id="${task.id}" aria-label="Delete task">✕</button>
     `;
